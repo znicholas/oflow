@@ -1,0 +1,51 @@
+<!--
+  $Id: codec.html,v 1.22 2011-04-28 15:31:10 gaudenz Exp $
+  Copyright (c) 2006-2010, JGraph Ltd
+  
+  Codec example for mxGraph. This example demonstrates dynamically
+  creating a graph from XML and encoding the model into XML, as well
+  as changing the default style for edges in-place.
+-->
+<html>
+<head>
+	<title>Ajax example for mxGraph</title>
+
+	<!-- Sets the basepath for the library if not in same directory -->
+	<script type="text/javascript">
+		mxBasePath = '../src';
+	</script>
+
+	<!-- Loads and initializes the library -->
+	<script type="text/javascript" src="../scripts/mxClient.js"></script>
+
+	<!-- Example code -->
+	<script type="text/javascript">
+
+		// Program starts here. Creates a sample graph in the
+		// DOM node with the specified ID. This function is invoked
+		// from the onLoad event handler of the document (see below).
+		function main(container)
+		{
+			// Checks if browser is supported
+			if (mxClient.isBrowserSupported())
+			{
+				var onload = function(req){
+					alert(req.getText());
+				};
+				
+				var onerror = function(req){
+					
+				};
+				
+				// This code can replace multiple textareas with encoded graphs
+				mxUtils.get("page/node.html", onload, onerror);
+			}
+		};
+	</script>
+</head>
+
+<!-- Calls the main function after the page has loaded. Container is dynamically created. -->
+<body onload="main();">
+
+</body>
+</html>
