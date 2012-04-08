@@ -20,5 +20,22 @@
 			<artifactId>obase</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>org.junit</groupId>
+			<artifactId>com.springsource.org.junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>org.springframework.test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>com.springsource.javax.transaction</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
