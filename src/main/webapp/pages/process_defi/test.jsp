@@ -46,10 +46,10 @@ $(document).ready(function() {
 	
 	function showRequest(formData, jqForm, options){
 		var queryString = $.param(formData);
-		alert("About to submit: " + queryString);
+		//alert("About to submit: " + queryString);
 	}
 	function showReponse(responseText, statusText) {
-		
+		alert(JSON.stringify(responseText));
 	}
 	
 	// 注意URL变化
@@ -71,7 +71,7 @@ $(document).ready(function() {
 		success: showReponse,
 		url: '<c:url value="/process_defi/1" />',
 		type: 'get',
-		dataType: null,
+		dataType: 'json',
 		clearForm: true,
 		resetForm: true,
 		timeout:3000
@@ -102,23 +102,10 @@ $(document).ready(function() {
 	});
 	
 	// create form(url与index form相同), 以post方式提交
-	$('#createForm').ajaxForm({
+	$('#saveForm').ajaxForm({
 		beforeSubmit: showRequest,
 		success: showReponse,
 		url: '<c:url value="/process_defi" />',
-		type: 'post',
-		dataType: null,
-		clearForm: true,
-		resetForm: true,
-		timeout:3000
-	});
-	
-	// update form, 将post转为put方式提交
-	$('#updateForm').ajaxForm({
-		beforeSubmit: showRequest,
-		success: showReponse,
-		url: '<c:url value="/process_defi" />',
-		data: {"id": "1", "name":"myName", "xml":"myXml"}, // 提交json
 		type: 'post',
 		dataType: null,
 		clearForm: true,
@@ -145,6 +132,20 @@ $(document).ready(function() {
 		url: '<c:url value="/process_defi" />',
 		type: 'post',
 		dataType: null,
+		clearForm: true,
+		resetForm: true,
+		timeout:3000
+	});
+	
+	// query form, data为查询条件
+	// ?exps={"name":"sss","operator":"=","value":"xxx"},{"name":"sss","operator":"=","value":"xxx"}
+	$('#queryForm').ajaxForm({
+		beforeSubmit: showRequest,
+		success: showReponse,
+		url: '<c:url value="/process_defi/query" />',
+		type: 'get',
+		data: {exps:'[{"name":"sss","operator":"=","value":"xxx"},{"name":"sss","operator":"=","value":"xxx"}]'},
+		dataType: 'json',
 		clearForm: true,
 		resetForm: true,
 		timeout:3000
@@ -196,34 +197,16 @@ $(document).ready(function() {
 				</li>
 			</ul>
 			
-			<h3>To Create</h3>
+			<h3>To Save</h3>
 			<ul>
 				<li>
-					<form id="createForm" class="createForm" action="">
-						<input id="createFormSubmit" type="submit" value="To Create" />
+					<form id="saveForm" class="saveForm" action="">
+						<input id="saveFormSubmit" type="submit" value="To Save" />
 						<div><input type="text" name="name"/></div>
 						<div>
 						<textarea name="xml">
 						</textarea>
 						</div>
-					</form>
-				</li>
-			</ul>
-			
-			<h3>To Update</h3>
-			<ul>
-				<li>
-					<form id="updateForm" class="updateForm" action="">
-						<input id="updateFormSubmit" type="submit" value="To Update" />
-						<!-- 生成一个hidden的_method=put,并于web.xml中的HiddenHttpMethodFilter配合使用，在服务端将post请求改为put请求 -->
-						<input type="hidden" name="_method" value="put"/>
-						<!--  
-						<div><input type="text" name="name"/></div>
-						<div>
-						<textarea name="xml">
-						</textarea>
-						</div>
-						-->
 					</form>
 				</li>
 			</ul>
@@ -248,6 +231,15 @@ $(document).ready(function() {
 						<input type="hidden" name="_method" value="delete"/>
 						<input type="hidden" name="ids" value="1"/>
 						<input type="hidden" name="ids" value="2"/>
+					</form>
+				</li>
+			</ul>
+			
+			<h3>To Query</h3>
+			<ul>
+				<li>
+					<form id="queryForm" class="queryForm" action="">
+						<input id="queryFormSubmit" type="submit" value="To Query" />
 					</form>
 				</li>
 			</ul>
