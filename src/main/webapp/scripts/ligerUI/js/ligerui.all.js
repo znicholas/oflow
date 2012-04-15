@@ -13177,10 +13177,12 @@
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown)
                 {
+                	
                     try
                     {
                         g.loading.hide();
                         g.trigger('error', [XMLHttpRequest, textStatus, errorThrown]);
+                        alert(errorThrown);
                     }
                     catch (e)
                     {
