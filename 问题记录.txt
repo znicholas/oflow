@@ -1,0 +1,53 @@
+1. Spring StringHttpMessageConverter 默认使用ISO-8859-1编码，使用 @ResponseBody返回字符串时中文乱码，在配置文件中注册自定义的
+StringHttpMessageConverter可解决此问题，但使用<mvc:annotation-driven/>创建的RequestMappingHandlerAdapter对方法参数的解释
+不正常，所以不能在配置文件中注册StringHttpMessageConverter来解决，故返回String字符串的时候，可以使用在response中print来实现,
+或直接返回对象,详细请查看下列代码：
+
+// 返回对象
+@RequestMapping("/indexData")
+public @ResponseBody
+List<Map<String, String>> getIndexData(HttpServletRequest request, HttpServletResponse response) {
+	List<Map<String, String>> rtn = new ArrayList<Map<String, String>>();
+
+	Map<String, String> item4 = new HashMap<String, String>();
+	item4.put("text", "流程服务测试");
+	item4.put("url", request.getContextPath() + "/process_defi/test");
+
+	Map<String, String> item0 = new HashMap<String, String>();
+	item0.put("text", "流程定制");
+	item0.put("url", request.getContextPath() + "/process_defi/test");
+
+	Map<String, String> item1 = new HashMap<String, String>();
+	item1.put("text", "流程运行");
+	item1.put("url", request.getContextPath() + "/flow_running.jsp");
+
+	Map<String, String> item2 = new HashMap<String, String>();
+	item2.put("text", "菜单列表");
+	item2.put("url", request.getContextPath() + "/menu_list.jsp");
+
+	rtn.add(item4);
+	rtn.add(item0);
+	rtn.add(item1);
+	rtn.add(item2);
+
+	return rtn;
+}
+
+// 返回字符串
+@RequestMapping("/indexDataStr")
+public void getIndexDataStr(HttpServletRequest request, HttpServletResponse response) {
+	String json = "[";
+	json += "{ \"text\": \"流程定制\", \"url\":\"" + request.getContextPath() + "/process_defi/test\"}, ";
+	json += "{ \"text\": \"流程运行\", \"url\":\"" + request.getContextPath() + "/flow_running.jsp\"},";
+	json += "{ \"text\": \"菜单列表\", \"url\":\"" + request.getContextPath() + "/menu_list.jsp\"}";
+	json += "]";
+
+	try {
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json;chart=UTF-8");
+		response.getWriter().print(json);
+		response.getWriter().close();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+}
