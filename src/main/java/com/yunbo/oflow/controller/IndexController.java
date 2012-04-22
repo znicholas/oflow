@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/")
 public class IndexController {
 
+	
+	
 	@RequestMapping("/indexData")
 	public @ResponseBody
 	List<Map<String, String>> getIndexData(HttpServletRequest request, HttpServletResponse response) {
