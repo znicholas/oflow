@@ -51,3 +51,5 @@ public void getIndexDataStr(HttpServletRequest request, HttpServletResponse resp
 		e.printStackTrace();
 	}
 }
+
+2. Tab内存泄露,iframe没有关闭 (待解决)

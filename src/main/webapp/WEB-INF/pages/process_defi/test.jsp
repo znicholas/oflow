@@ -59,10 +59,10 @@ $(document).ready(function() {
 		success: showReponse,
 		url: '<c:url value="/process_defi" />',
 		type: 'get',
-		dataType: null,
-		clearForm: true,
-		resetForm: true,
-		timeout:3000
+		dataType: null, // 数据类型
+		clearForm: true, // 清空表单
+		resetForm: true, // 重置表单
+		timeout:3000 // 请求超时时间,单位(毫秒)
 	});
 	
 	// view form

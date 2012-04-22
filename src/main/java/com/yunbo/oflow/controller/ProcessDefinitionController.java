@@ -2,6 +2,7 @@ package com.yunbo.oflow.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +15,13 @@ import com.yunbo.obase.core.controller.format.JsonFormat;
 import com.yunbo.obase.core.dao.Expression;
 import com.yunbo.obase.core.dao.Pager;
 import com.yunbo.oflow.model.ProcessDefinitionEntity;
+import com.yunbo.oflow.service.ProcessDefinitionService;
 
 @Controller
 @RequestMapping("/process_defi")
 public class ProcessDefinitionController extends BaseRestJsonSpringController<ProcessDefinitionEntity, java.lang.Long> {
+	@Autowired
+	ProcessDefinitionService service;
 
 	@RequestMapping(value = "/test")
 	public ModelAndView test() {
@@ -26,51 +30,41 @@ public class ProcessDefinitionController extends BaseRestJsonSpringController<Pr
 
 	@Override
 	public ModelAndView index(ProcessDefinitionEntity model) {
-		System.out.println("toIndex");
 		return new ModelAndView("/process_defi/list");
 	}
 
 	@Override
 	public @ResponseBody
-	ProcessDefinitionEntity view(Long id) throws Exception {
-		System.out.println("toView");
-		ProcessDefinitionEntity entity = new ProcessDefinitionEntity();
-		entity.setName("myName");
-		entity.setXml("myXml");
-
+	ProcessDefinitionEntity view(@PathVariable Long id) throws Exception {
+		ProcessDefinitionEntity entity = service.find(id);
 		return entity;
 	}
 
-	@Override
+	/**
+	 * 跳转到Edit页面
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/{id}/edit")
 	public @ResponseBody
-	ProcessDefinitionEntity edit(Long id) throws Exception {
-		System.out.println("toEdit");
-		ProcessDefinitionEntity entity = new ProcessDefinitionEntity();
-		entity.setName("myName");
-		entity.setXml("myXml");
-
-		return entity;
+	ModelAndView toEdit(@PathVariable Long id) throws Exception {
+		return new ModelAndView("/process_defi/edit").addObject("id", id);
 	}
 
+	/**
+	 * 跳转到空的编辑页面
+	 */
 	@Override
-	public @ResponseBody
-	ProcessDefinitionEntity _new(ProcessDefinitionEntity model) throws Exception {
-		System.out.println("toNew");
-		ProcessDefinitionEntity entity = new ProcessDefinitionEntity();
-		entity.setName("myName");
-		entity.setXml("myXml");
-
-		return model;
+	public ModelAndView create() throws Exception {
+		return new ModelAndView("/process_defi/edit");
 	}
 
 	@Override
 	public @ResponseBody
 	ProcessDefinitionEntity save(ProcessDefinitionEntity model) throws Exception {
-		System.out.println("toSave");
-		System.out.println("Name-> " + model.getName());
-		System.out.println("XML-> " + model.getXml());
-
-		return model;
+		return service.save(model);
 	}
 
 	@Override
@@ -92,12 +86,9 @@ public class ProcessDefinitionController extends BaseRestJsonSpringController<Pr
 	@Override
 	public @ResponseBody
 	Pager<ProcessDefinitionEntity> query(
-			@RequestParam @JsonFormat(contentType = Expression.class) List<Expression> exps) {
-		for (Expression expression : exps) {
-			System.out.println(expression.getName() + expression.getOperator() + expression.getValue());
-		}
-
-		Pager<ProcessDefinitionEntity> pager = new Pager<ProcessDefinitionEntity>();
+			@RequestParam @JsonFormat(contentType = Expression.class) List<Expression> exps, int pageNumber,
+			int pageSize) {
+		Pager<ProcessDefinitionEntity> pager = service.query(exps, pageNumber, pageSize);
 		return pager;
 	}
 }
