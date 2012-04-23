@@ -31,7 +31,7 @@ public class IndexController {
 
 		Map<String, String> item0 = new HashMap<String, String>();
 		item0.put("text", "流程定制");
-		item0.put("url", request.getContextPath() + "/process_defi/test");
+		item0.put("url", request.getContextPath() + "/process_defi");
 
 		Map<String, String> item1 = new HashMap<String, String>();
 		item1.put("text", "流程运行");
