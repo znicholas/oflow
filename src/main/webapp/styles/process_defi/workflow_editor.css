@@ -1,0 +1,11 @@
+.l-editor-accordion-item {
+	height: 26px;
+	line-height: 26px;
+	padding-left: 10px;
+	display: block;
+}
+
+.l-editor-accordion-item-over {
+	background: #FFEEAC;
+	border: 1px solid #DB9F00;
+}

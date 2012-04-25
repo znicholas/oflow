@@ -27,6 +27,11 @@ public class ProcessDefinitionController extends BaseRestJsonSpringController<Pr
 	public ModelAndView test() {
 		return new ModelAndView("/process_defi/test");
 	}
+	
+	@RequestMapping(value = "/editor")
+	public ModelAndView editor() {
+		return new ModelAndView("/process_defi/workflow_editor");
+	}
 
 	@Override
 	public ModelAndView index(ProcessDefinitionEntity model) {

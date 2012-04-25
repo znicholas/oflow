@@ -53,3 +53,27 @@ public void getIndexDataStr(HttpServletRequest request, HttpServletResponse resp
 }
 
 2. Tab内存泄露,iframe没有关闭 (待解决)
+
+3. mxGraph拖放元素被挡问题,修改startDrag和createDragElement方法(已解决)
+mxDragSource.prototype.startDrag = function(evt) {
+	this.dragElement = this.createDragElement(evt);
+	this.dragElement.style.position = 'absolute';
+	this.dragElement.style.zIndex = '9999'; // 修改拖放元素的层级
+	mxUtils.setOpacity(this.dragElement, 70);
+};
+mxDragSource.prototype.createDragElement = function(evt) {
+	if (this.element.tagName == 'IMG') { // 获取img元素
+	} else {
+		var nodes = this.element.childNodes;
+		if (nodes.length > 0) {
+			for(var i=0; i < nodes.length; i++) {
+				var node = nodes[i];
+				if (node.tagName == 'IMG'){
+					return node.cloneNode(true);
+				}
+			}
+		}
+	}
+
+	return this.element.cloneNode(true);
+};

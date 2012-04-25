@@ -14,8 +14,6 @@
     <style type="text/css"> 
     
 	</style>
-	<!-- 数据加载 -->
-    <script src="indexdata.js" type="text/javascript"></script>
 	<script type="text/javascript">
             var tab = null;
             var accordion = null;
