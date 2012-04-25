@@ -8,6 +8,7 @@
 <title>oFlow流程编辑器</title>
 
 <link href="<c:url value="/scripts/ligerUI/skins/Aqua/css/ligerui-all.css" />" rel="stylesheet" type="text/css" />
+<link href="<c:url value="/scripts/ligerUI/skins/Aqua/css/ligerui-layout.css" />" rel="stylesheet" type="text/css" />
 <link href="<c:url value="/styles/index.css" />" rel="stylesheet" type="text/css" />
 <link href="<c:url value="/styles/process_defi/workflow_editor.css" />" rel="stylesheet" type="text/css" />
 <script src="<c:url value="/scripts/jquery/jquery-1.5.2.min.js" />" type="text/javascript"></script>    
@@ -23,81 +24,32 @@
 <script type="text/javascript" src="<c:url value="/scripts/mxgraph/mxConstants.js" />"></script>
 <script type="text/javascript" src="<c:url value="/scripts/mxgraph/mxOther.js" />"></script>
 
+<!-- workflow editor -->
+<script type="text/javascript" src="<c:url value="/scripts/mxgraph/mxApplication.js" />"></script>
+<script type="text/javascript" src="<c:url value="/scripts/mxgraph/workfloweditor.js" />"></script>
+
 <script type="text/javascript" src="<c:url value="/scripts/oflow/oflow.util.js" />"></script>
-<script type="text/javascript" src="<c:url value="/scripts/oflow/workflowdata.js" />"></script>
+
+<!-- 设置流程编辑器画布 -->
+<style type="text/css" media="screen">
+div.base {
+	position: absolute;
+	overflow: hidden;
+	white-space: nowrap;
+	font-family: Arial;
+	font-size: 8pt;
+}
+div.base#graph {
+	border-style: solid;
+	border-color: #F2F2F2;
+	border-width: 1px;
+	background: url('<c:url value="/scripts/mxgraph/images/grid.gif" />');
+}
+</style>
 
 <script type="text/javascript">
 var accordion = null;
 $(function () {
-	mxConnectionHandler.prototype.connectImage = new mxImage('<c:url value="/images/mxgraph/connector.gif" />', 16, 16);
-	
-	// 设置流程图容器
-	var container = document.getElementById("container");
-	container.style.overflow = 'hidden';
-	container.style.background = 'url("<c:url value="/images/mxgraph/grid.gif" />")';
-	
-	// Workaround for Internet Explorer ignoring certain styles
-	if (mxClient.IS_IE)
-	{
-		new mxDivResizer(container);
-	}
-	
-	// Creates the model and the graph inside the container
-	// using the fastest rendering available on the browser
-	var model = new mxGraphModel();
-	var graph = new mxGraph(container, model);
-
-	// Enables new connections in the graph
-	graph.setConnectable(true);
-	graph.setMultigraph(false);
-
-	// Stops editing on enter or escape keypress
-	var keyHandler = new mxKeyHandler(graph);
-	var rubberband = new mxRubberband(graph);
-	
-	// 新建activites toolbar
-	var tbContainer = document.getElementById("editor_accordion_acts");
-	var tbContainer2 = document.getElementById("copyright");
-	tbContainer.style.overflow = 'hidden';
-	var toolbar = new mxToolbar(tbContainer);
-	tbContainer2.style.overflow = 'hidden';
-	var toolbar2 = new mxToolbar(tbContainer2);
-	toolbar.enabled = false
-	
-	var addVertex = function(title, icon, w, h, style)
-	{
-		var vertex = new mxCell(null, new mxGeometry(0, 0, w, h), style);
-		vertex.setVertex(true);
-	
-		addToolbarItem(title, graph, toolbar, vertex, icon);
-		//addToolbarItem(title, graph, toolbar2, vertex, icon);
-	};
-	addVertex('rectangle', '<c:url value="/images/mxgraph/editors/rectangle.gif" />', 100, 40, '');
-	addVertex('rounded', '<c:url value="/images/mxgraph/editors/rounded.gif" />', 100, 40, 'shape=rounded');
-	
-	function addToolbarItem(title, graph, toolbar, prototype, image)
-	{
-		// Function that is executed when the image is dropped on
-		// the graph. The cell argument points to the cell under
-		// the mousepointer if there is one.
-		var funct = function(graph, evt, cell)
-		{
-			graph.stopEditing(false);
-
-			var pt = graph.getPointForEvent(evt);
-			var vertex = graph.getModel().cloneCell(prototype);
-			vertex.geometry.x = pt.x;
-			vertex.geometry.y = pt.y;
-				
-			graph.addCell(vertex);
-			graph.setSelectionCell(vertex);
-		}
-
-		// Creates the image which is used as the drag icon (preview)
-		var img = toolbar.addMode(title, image, funct);
-		mxUtils.makeDraggable(img, graph, funct);
-	}
-	
 	//布局
 	$("#editor_layout").ligerLayout({ 
 		leftWidth: 190, 
@@ -142,10 +94,13 @@ $(function () {
     $("#pageloading").hide();
     
     $(document.body).disableSelection();
+    
+    // 初始化流程编辑器
+    new mxApplication(mxBasePath + '/config/workfloweditor.xml');
 });
 
 // 重载mxToolbar方法
-mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style) {
+/*mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style) {
 	var div = document.createElement('div');
 	var text = document.createTextNode(title);
 	div.className = 'l-editor-accordion-item';
@@ -186,7 +141,7 @@ mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style) {
 	div.appendChild(text);
 	this.container.appendChild(div);
 	return div;
-};
+};*/
 
 function f_heightChanged(options) {
     if (accordion && options.middleHeight - 24 > 0)
@@ -218,8 +173,18 @@ function f_heightChanged(options) {
 	<!-- 中间区域 -->
 	<div position="center" id="framecenter">
 		<!-- 流程图容器 -->
-		<div id="container" style="height: 100%">
-		</div> 
+		<div id="graph" class="base">
+		<!-- Graph Here -->
+		</div>
+		<div id="xml" class="base" style="left:0px;right:0px;top:0px;bottom:40px;display:none;">
+			<textarea id="xmlContent" style="height:100%;width:100%;"></textarea>
+		</div>
+		<div class="base" align="right" style="width:100%;height:20px;bottom:0px;right:40px;">
+			<input id="source" type="checkbox" />&nbsp;Source
+		</div>
+		<div id="status" class="base" align="right">
+			<!-- Status Here -->
+		</div>
 	</div>
 	<!-- 右边区域 -->
 	<div position="right"  title="Properties" id="prop_accordion">

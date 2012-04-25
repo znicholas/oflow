@@ -1445,7 +1445,10 @@ mxToolbar.prototype.container = null;
 mxToolbar.prototype.enabled = true;
 mxToolbar.prototype.noReset = false;
 mxToolbar.prototype.updateDefaultMode = true;
-mxToolbar.prototype.addItem = function(title, icon, funct, pressedIcon, style, factoryMethod) {
+mxToolbar.prototype.addItem = function(title, icon, funct, pressedIcon, style, factoryMethod) { // 添加工具条项
+	if (mxBasePath) {
+		icon = mxBasePath +"/"+ icon;
+	}
 	var img = document.createElement((icon != null) ? 'img': 'button');
 	var initialClassName = style || ((factoryMethod != null) ? 'mxToolbarMode': 'mxToolbarItem');
 	img.className = initialClassName;
@@ -1544,6 +1547,9 @@ mxToolbar.prototype.addOption = function(combo, title, value) {
 	return option;
 };
 mxToolbar.prototype.addSwitchMode = function(title, icon, funct, pressedIcon, style) {
+	if (mxBasePath) {
+		icon = mxBasePath +"/"+ icon;
+	}
 	var img = document.createElement('img');
 	img.initialClassName = style || 'mxToolbarMode';
 	img.className = img.initialClassName;
@@ -1591,6 +1597,9 @@ mxToolbar.prototype.addSwitchMode = function(title, icon, funct, pressedIcon, st
 	return img;
 };
 mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style, toggle) {
+	if (mxBasePath) {
+		icon = mxBasePath +"/"+ icon;
+	}
 	toggle = (toggle != null) ? toggle: true;
 	var img = document.createElement((icon != null) ? 'img': 'button');
 	img.initialClassName = style || 'mxToolbarMode';
@@ -2246,6 +2255,9 @@ mxPopupMenu.prototype.isPopupTrigger = function(me) {
 	return me.isPopupTrigger() || (this.useLeftButtonForPopup && mxEvent.isLeftMouseButton(me.getEvent()));
 };
 mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, enabled) {
+	if (mxBasePath) {
+		image = mxBasePath +"/"+ image;
+	}
 	parent = parent || this;
 	this.itemCount++;
 	if (parent.willAddSeparator) {
@@ -17099,7 +17111,7 @@ mxGraph.prototype.getCellStyle = function(cell) {
 	}
 	return style;
 };
-mxGraph.prototype.postProcessCellStyle = function(style) {
+mxGraph.prototype.postProcessCellStyle = function(style) { // 处理Cell Style
 	if (style != null) {
 		var key = style[mxConstants.STYLE_IMAGE];
 		var image = this.getImageFromBundles(key);
@@ -17108,12 +17120,17 @@ mxGraph.prototype.postProcessCellStyle = function(style) {
 		} else {
 			image = key;
 		}
+		
 		if (image != null && image.substring(0, 11) == "data:image/") {
 			var comma = image.indexOf(',');
 			if (comma > 0) {
 				image = image.substring(0, comma) + ";base64," + image.substring(comma + 1);
 			}
 			style[mxConstants.STYLE_IMAGE] = image;
+		}
+		
+		if (mxBasePath && style[mxConstants.STYLE_IMAGE]) {
+			style[mxConstants.STYLE_IMAGE] = mxBasePath +"/"+ style[mxConstants.STYLE_IMAGE];
 		}
 	}
 	return style;
@@ -26044,12 +26061,16 @@ mxObjectCodec.prototype.addObjectValue = function(obj, fieldname, value, templat
 		}
 	}
 };
-mxObjectCodec.prototype.processInclude = function(dec, node, into) {
+mxObjectCodec.prototype.processInclude = function(dec, node, into) { // 处理include标签
 	if (node.nodeName == 'include') {
 		var name = node.getAttribute('name');
 		if (name != null) {
 			try {
-				var xml = mxUtils.load(name).getDocumentElement();
+				var url = name;
+				if (mxBasePath) {
+					url = mxBasePath +"/"+ url;
+				}
+				var xml = mxUtils.load(url).getDocumentElement();
 				if (xml != null) {
 					dec.decode(xml, into);
 				}
@@ -26622,7 +26643,7 @@ mxCodecRegistry.register(function() {
 		}
 		mxObjectCodec.prototype.decodeChild.apply(this, arguments);
 	};
-	codec.decodeUi = function(dec, node, editor) {
+	codec.decodeUi = function(dec, node, editor) { // 处理ui标签
 		var tmp = node.firstChild;
 		while (tmp != null) {
 			if (tmp.nodeName == 'add') {
@@ -26657,7 +26678,11 @@ mxCodecRegistry.register(function() {
 					editor.setMapContainer(element);
 				}
 			} else if (tmp.nodeName == 'resource') {
-				mxResources.add(tmp.getAttribute('basename'));
+				var resourceName = tmp.getAttribute('basename');
+				if (mxBasePath) {
+					resourceName = mxBasePath +"/"+resourceName;
+				}
+				mxResources.add(resourceName);
 			} else if (tmp.nodeName == 'stylesheet') {
 				mxClient.link('stylesheet', tmp.getAttribute('name'));
 			}
