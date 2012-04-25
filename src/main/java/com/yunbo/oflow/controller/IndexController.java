@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yunbo.obase.core.util.PageRequestFactory;
+
 @Controller
 @RequestMapping("/")
 public class IndexController {
@@ -23,7 +25,6 @@ public class IndexController {
 	public @ResponseBody
 	List<Map<String, String>> getIndexData(HttpServletRequest request, HttpServletResponse response) {
 		List<Map<String, String>> rtn = new ArrayList<Map<String, String>>();
-
 		Map<String, String> item4 = new HashMap<String, String>();
 		item4.put("text", "流程服务测试");
 		item4.put("url", request.getContextPath() + "/process_defi/test");
