@@ -91,9 +91,9 @@ public class ProcessDefinitionController extends BaseRestJsonSpringController<Pr
 	@Override
 	public @ResponseBody
 	Pager<ProcessDefinitionEntity> query(
-			@RequestParam @JsonFormat(contentType = Expression.class) List<Expression> exps, int page,
-			int pagesize) {
-		Pager<ProcessDefinitionEntity> pager = service.query(exps, page, pagesize);
+			@RequestParam @JsonFormat(contentType = Expression.class) List<Expression> exps, int pageNumber,
+			int pageSize) {
+		Pager<ProcessDefinitionEntity> pager = service.query(exps, pageNumber, pageSize);
 		return pager;
 	}
 }
