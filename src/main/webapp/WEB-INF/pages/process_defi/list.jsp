@@ -15,12 +15,12 @@
 			items : [ 
 			{text : '增加',click : doAdd,icon : 'add'},
 			{line : true}, 
-			{text : '修改',click : change}, 
-			{line : true}, {text : '删除',click : change}
+			{text : '修改',click : change,icon: 'modify'}, 
+			{line : true}, {text : '删除',click : change,icon: 'delete'}
 			]
 		});
 
-		grid = $("#maingrid").ligerGrid({
+		window['g'] = $("#maingrid").ligerGrid({
 			url : '${pageContext.request.contextPath}/process_defi/query',//配置url地址
 			columns : [
 				{display : 'ID',name : 'id',align : 'left',width : 0,hide : 1}, 
@@ -32,12 +32,17 @@
 			rownumbers : true,
 			pageSize: 20,
 			root:'result',
+			isScroll: false, 
+			frozen:false,
+			autowidth:true,
+			usePager:true,
+			cssClass: 'l-grid-gray', //颜色
 			parms : [ {
 				name:'exps',
 				value:'[]'//{"name":"name","operator":"=","value":""}
 			} ]
 		});
-		manager = $("#maingrid").ligerGetGridManager(); //装载
+		//manager = $("#maingrid").ligerGetGridManager(); //装载 用window['g']后,不需要再加载
 	});
 	//format的写法
 	function format(row, i) {
@@ -75,12 +80,18 @@
 	}
 </script>
 </head>
-<body>
+<body style="padding:0px; overflow:hidden;"> 
 	<div id="toptoolbar"></div>
-	<div id="searchbar">
-		&nbsp;名称：<input id="search_name" type="text" value="" name="search_name" />
-		<input id="btnOK" type="button" value="查询" onclick="f_search()" />
+	<div class="l-panel-search">
+	    <div class="l-panel-search-item">名称：</div>
+		    <div class="l-panel-search-item">
+		        <input type="search_name" id="search_name" />
+		    </div>
+		    <div class="l-panel-search-item">
+		        <div id="searchbtn" style="width:80px;"><input id="btnOK" type="button" value="查询" onclick="f_search()" /></div>
+		    </div>
 	</div>
 	<div id="maingrid" style="margin: 0; padding: 0"></div>
+	<div style="display:none;">
 </body>
 </html>
