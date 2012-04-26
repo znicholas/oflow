@@ -144,7 +144,7 @@ $(document).ready(function() {
 		success: showReponse,
 		url: '<c:url value="/process_defi/query" />',
 		type: 'get',
-		data: {exps:'[{"name":"sss","operator":"=","value":"xxx"},{"name":"sss","operator":"=","value":"xxx"}]'},
+		data: {exps:'[{"name":"sss","operator":"=","value":"xxx"},{"name":"sss","operator":"=","value":"xxx"}]',pageNumber:1,pageSize:10},
 		dataType: 'json',
 		clearForm: true,
 		resetForm: true,
