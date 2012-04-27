@@ -60,20 +60,32 @@
                 return;
             }
             if (!manager.id) manager.id = this.getId(manager.__idPrev());
-            if (this.managers[manager.id])
-                throw new Error(this.error.managerIsExist);
+            if (this.managers[manager.id]) 
+                throw new Error(this.error.managerIsExist +": "+ manager.id);
             this.managers[manager.id] = manager;
         },
         remove: function (arg)
         {
-            if (typeof arg == "string" || typeof arg == "number")
+            var id = null;
+        	if (typeof arg == "string" || typeof arg == "number")
             {
-                delete $.ligerui.managers[arg];
+                id = arg;
             }
             else if (typeof arg == "object" && arg instanceof $.ligerui.core.Component)
             {
-                delete $.ligerui.managers[arg.id];
+            	id = arg.id;
             }
+        	
+        	// 清理子元素管理器
+            $("[id]", "#"+ id).each(function(){
+            	if (this.id) {
+            		delete $.ligerui.managers[this.id];
+            	}
+            });
+        	
+        	if (id) {
+        		delete $.ligerui.managers[id];
+        	}
         },
         //获取ligerui对象
         //1,传入ligerui ID

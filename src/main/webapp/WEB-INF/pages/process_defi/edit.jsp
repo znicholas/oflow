@@ -2,38 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>编辑页面</title>
-    
-    <link href="<c:url value="/scripts/ligerUI/skins/Aqua/css/ligerui-all.css" />" rel="stylesheet" type="text/css" />
-    <link href="<c:url value="/scripts/ligerUI/skins/Gray/css/all.css" />" rel="stylesheet" type="text/css" />
-    <link href="<c:url value="/scripts/ligerUI/skins/ligerui-icons.css" />" rel="stylesheet" type="text/css" />
-    
-    <script src="<c:url value="/scripts/jquery/jquery-1.5.2.min.js" />" type="text/javascript"></script> 
-    <script src="<c:url value="/scripts/ligerUI/js/core/base.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/oflow/oflow.util.js" />" type="text/javascript"></script>
-    
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerForm.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerDateEditor.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerComboBox.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerCheckBox.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerButton.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerDialog.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerRadio.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerSpinner.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerTextBox.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerTip.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerToolBar.js" />" type="text/javascript"></script>
-    <!-- 校验 -->
-    <script src="<c:url value="/scripts/jquery-validation/jquery.validate.min.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/jquery-validation/jquery.metadata.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/scripts/jquery-validation/messages_cn.js" />" type="text/javascript"></script>
-    
-    <script type="text/javascript" src="<c:url value="/scripts/jqueryform/jquery.form-2.8.js" />"></script>
-	<script type="text/javascript" src="<c:url value="/scripts/json2.js" />"></script>
-    
     <script type="text/javascript">
         $(function () {
         	 var contextPath = '<c:url value="/" />';
@@ -57,10 +25,12 @@
         	
         	function doReturn(item)
     	    {
-    	        window.location = contextPath + '/process_defi';
+        		f_reloadTab(contextPath + '/process_defi');
     	    }
     	    
     		function showReponse(data, statusText) {
+    			var d = $.ligerDialog.tip({ content: "保存成功"});
+    			setTimeout(function () { d.close() }, 2000); // 2秒后自动关闭
     			$("#processdefiForm").dataToForm(data);
     		}
     		
@@ -110,7 +80,7 @@
         });  
     </script>
     <style type="text/css">
-        body{font-size:12px;}
+        #processdefiForm{font-size:12px;}
         .l-table-edit {}
         .l-table-edit-td{padding:4px;}
         .l-button-submit,.l-button-test{width:80px; float:left; margin-left:10px; padding-bottom:2px;}
@@ -118,7 +88,6 @@
         #errorLabelContainer{ padding:10px; width:300px; border:1px solid #FF4466; display:none; background:#FFEEEE; color:Red;}
     </style>
 </head>
-<body style="padding:10px">
 
 <form name="processdefiForm" id="processdefiForm" method="post">
 	<!-- 工具条 -->
@@ -147,5 +116,3 @@
 <div style="display:none">
 <!--  数据统计代码 -->
 </div>
-</body>
-</html>

@@ -13,7 +13,7 @@
 
     $.fn.ligerGrid = function (options)
     {
-        return $.ligerui.run.call(this, "ligerGrid", arguments);
+    	return $.ligerui.run.call(this, "ligerGrid", arguments);
     };
 
     $.fn.ligerGetGridManager = function ()

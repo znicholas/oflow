@@ -11,6 +11,7 @@
 
     $.fn.ligerTab = function (options)
     {
+    	this.tabs = this.tabs ? this.tabs : {};
         return $.ligerui.run.call(this, "ligerTab", arguments);
     };
 
@@ -521,12 +522,15 @@
         addTabItem: function (options)
         {
             var g = this, p = this.options;
+            var t = this.tabs = this.tabs? this.tabs: {};
+            t[options.tabid] = options;
             if (g.trigger('beforeAddTabItem', [tabid]) == false)
                 return false;
             var tabid = options.tabid;
             if (tabid == undefined) tabid = g.getNewTabid();
             var url = options.url;
             var content = options.content;
+            var useFrame = options.useFrame;
             var text = options.text;
             var showClose = options.showClose;
             var height = options.height;
@@ -547,7 +551,8 @@
             }
             tabitem.attr("tabid", tabid);
             contentitem.attr("tabid", tabid);
-            if (url)
+            tabitem.data('options', options);
+            if (url && useFrame)
             {
                 iframe.attr("name", tabid)
                  .attr("id", tabid)
@@ -561,7 +566,13 @@
             }
             else
             {
-                iframe.remove(); 
+            	// ajax获取页面内容
+            	if (url) {
+            		contentitem.attr("id", tabid);
+            		contentitem.load(url); 
+            	}
+            	
+            	iframe.remove(); 
                 iframeloading.remove();
             }
             if (content)
@@ -623,7 +634,7 @@
         //移除tab项
         removeTabItem: function (tabid)
         {
-            var g = this, p = this.options;
+        	var g = this, p = this.options;
             if (g.trigger('beforeRemoveTabItem', [tabid]) == false)
                 return false;
             var currentIsSelected = $("li[tabid=" + tabid + "]", g.tab.links.ul).hasClass("l-selected");
@@ -632,6 +643,10 @@
                 $(".l-tab-content-item[tabid=" + tabid + "]", g.tab.content).prev().show();
                 $("li[tabid=" + tabid + "]", g.tab.links.ul).prev().addClass("l-selected").siblings().removeClass("l-selected");
             }
+            // 释放内存
+            $.ligerui.remove(tabid);
+            
+            // 删除页面元素
             $(".l-tab-content-item[tabid=" + tabid + "]", g.tab.content).remove();
             $("li[tabid=" + tabid + "]", g.tab.links.ul).remove();
             g.setTabButton();
@@ -688,18 +703,36 @@
                 g.removeTabItem(this);
             });
         },
-        reload: function (tabid)
+        reload: function (tabid, url)
         {
             var g = this, p = this.options;
-            var contentitem = $(".l-tab-content-item[tabid=" + tabid + "]");
-            var iframeloading = $(".l-tab-loading:first", contentitem);
-            var iframe = $("iframe:first", contentitem);
-            var url = $(iframe).attr("src");
-            iframeloading.show();
-            iframe.attr("src", url).unbind('load.tab').bind('load.tab', function ()
-            {
-                iframeloading.hide();
-            });
+            var tabitem = $("li[tabid=" + tabid + "]", g.tab.links.ul);
+            
+            var tOptions = tabitem.data("options");
+            //alert(JSON.stringify(tOptions));
+            if (tOptions) {
+            	if (url) {
+            		tOptions.url = url;
+            	}
+            	
+            	var contentitem = $(".l-tab-content-item[tabid=" + tabid + "]");
+            	if (tOptions.url && tOptions.useFrame) {
+                    var iframeloading = $(".l-tab-loading:first", contentitem);
+                    var iframe = $("iframe:first", contentitem);
+                    var url = $(iframe).attr("src");
+                    iframeloading.show();
+                    iframe.attr("src", url).unbind('load.tab').bind('load.tab', function ()
+                    {
+                        iframeloading.hide();
+                    });
+            	} else if (tOptions.url) {
+            		 // 释放内存
+                    $.ligerui.remove(tabid);
+            		contentitem.attr("id", tabid);
+            		contentitem.load(tOptions.url); 
+            	}
+            }
+            
         },
         removeAll: function (compel)
         {

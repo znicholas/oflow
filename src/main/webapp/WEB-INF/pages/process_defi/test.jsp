@@ -4,12 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script type="text/javascript" src="<c:url value="/scripts/jquery/jquery-1.5.2.min.js" />"></script>
-<script type="text/javascript" src="<c:url value="/scripts/jqueryform/jquery.form-2.8.js" />"></script>
-<script type="text/javascript" src="<c:url value="/scripts/json2.js" />"></script>
+
 <script>
 $(document).ready(function() {
 	MvcUtil = {};
@@ -152,9 +147,6 @@ $(document).ready(function() {
 	});
 });
 </script>
-<title>测试页面</title>
-</head>
-<body>
 	<div id="messageconverters">
 		<h2>ProcessDefinitionController测试</h2>
 		<p>
@@ -245,5 +237,3 @@ $(document).ready(function() {
 			</ul>
 		</div>
 	</div>
-</body>
-</html>

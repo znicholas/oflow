@@ -8,8 +8,43 @@
     <title>oFlow流程管理平台导航主页</title>
     <link href="scripts/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
     <link href="styles/index.css" rel="stylesheet" type="text/css" />
-    <script src="scripts/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>    
-    <script src="scripts/ligerUI/js/ligerui.all.js" type="text/javascript"></script> 
+    <link href="<c:url value="/scripts/ligerUI/skins/ligerui-icons.css" />" rel="stylesheet" type="text/css" />
+    
+    <script src="scripts/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>
+    <script src="scripts/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script src="scripts/ligerUI/js/plugins/ligerAccordion.js" type="text/javascript"></script>
+    <script src="scripts/ligerUI/js/plugins/ligerTab.js" type="text/javascript"></script>
+    <script src="scripts/ligerUI/js/plugins/ligerTree.js" type="text/javascript"></script>
+    <script src="scripts/ligerUI/js/plugins/ligerLayout.js" type="text/javascript"></script> 
+    <script src="scripts/ligerUI/js/plugins/ligerMenu.js" type="text/javascript"></script>
+    <script src="scripts/ligerUI/js/plugins/ligerMenuBar.js" type="text/javascript"></script>
+    <script src="scripts/ligerUI/js/plugins/ligerWindow.js" type="text/javascript"></script>
+    <!-- edit -->
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerForm.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerDateEditor.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerComboBox.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerCheckBox.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerButton.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerDialog.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerRadio.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerSpinner.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerTextBox.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerTip.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerToolBar.js" />" type="text/javascript"></script>
+    <!-- list -->
+    <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerGrid.js" />" type="text/javascript"></script>
+	<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerToolBar.js" />" type="text/javascript"></script>
+	<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerResizable.js" />" type="text/javascript"></script>
+	<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerCheckBox.js" />" type="text/javascript"></script>
+    
+    <!-- validation -->
+    <script src="<c:url value="/scripts/jquery-validation/jquery.validate.min.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/jquery-validation/jquery.metadata.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/scripts/jquery-validation/messages_cn.js" />" type="text/javascript"></script>
+    
+    <script type="text/javascript" src="<c:url value="/scripts/jqueryform/jquery.form-2.8.js" />"></script>
+	<script type="text/javascript" src="<c:url value="/scripts/json2.js" />"></script>
+	<script src="<c:url value="/scripts/oflow/oflow.util.js" />" type="text/javascript"></script>
     
     <style type="text/css"> 
     
@@ -73,10 +108,14 @@
                 if (accordion && options.middleHeight - 24 > 0)
                     accordion.setHeight(options.middleHeight - 24);
             }
-            function f_addTab(tabid,text, url)
+            function f_addTab(tabid, text, url, useFrame)
             { 
-                tab.addTabItem({ tabid : tabid,text: text, url: url });
+                tab.addTabItem({ tabid : tabid,text: text, url: url, useFrame: useFrame});
             } 
+            function f_reloadTab(url) { // 重新加载tab
+            	var tabid = tab.getSelectedTabItemID();
+            	tab.reload(tabid, url);
+            }
 	</script> 
 </head>
 
@@ -114,7 +153,7 @@
         </div> 
     </div>
     <div  style="height:32px; line-height:32px; text-align:center;">
-            Copyright © 2011-2012 www.yunbo.com
+            Copyright © 2012-2013 www.yunbosoruce.com
     </div>
     <div style="display:none"></div>
 </body>

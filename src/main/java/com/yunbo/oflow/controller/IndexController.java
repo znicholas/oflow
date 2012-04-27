@@ -35,11 +35,13 @@ public class IndexController {
 
 		Map<String, String> item1 = new HashMap<String, String>();
 		item1.put("text", "流程运行");
-		item1.put("url", request.getContextPath() + "/flow_running.jsp");
+		item1.put("url", request.getContextPath() + "/process_defi");
+		//item1.put("url", request.getContextPath() + "/flow_running.jsp");
 
 		Map<String, String> item2 = new HashMap<String, String>();
 		item2.put("text", "菜单列表");
-		item2.put("url", request.getContextPath() + "/menu_list.jsp");
+		item2.put("url", request.getContextPath() + "/process_defi");
+		//item2.put("url", request.getContextPath() + "/menu_list.jsp");
 
 		rtn.add(item4);
 		rtn.add(item0);
