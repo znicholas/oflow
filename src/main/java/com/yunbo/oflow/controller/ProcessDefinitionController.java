@@ -74,9 +74,11 @@ public class ProcessDefinitionController extends BaseRestJsonSpringController<Pr
 
 	@Override
 	public String delete(@PathVariable Long id) {
-		System.out.println("toDelete");
-		System.out.println("ID-> " + id);
-		return "success";
+		boolean falg = service.removeById(id);
+		if(falg)
+			return "success";
+		else
+			return "input";
 	}
 
 	@Override
