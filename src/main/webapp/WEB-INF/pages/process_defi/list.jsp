@@ -16,6 +16,7 @@
 <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerToolBar.js" />" type="text/javascript"></script>
 <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerResizable.js" />" type="text/javascript"></script>
 <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerCheckBox.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerDialog.js" />" type="text/javascript"></script>
 
 <script type="text/javascript">    	
 	var contextPath = '<c:url value="/" />';    
@@ -27,15 +28,37 @@
 		if (data && data.id) {        		 
 			window.location = contextPath + 'process_defi/'+data.id+'/edit';        	
 		} else {				
-			alert('请选择一条记录');        	
+			$.ligerDialog.alert('请选择一条记录!', '提示', 'success');
 		}        
 	}        
-	function doRemove(item) {            
-		alert(item.text);        
-	}        
+	function doRemove(item) {
+		 $.ligerDialog.confirm('确定要删除?', function (yes){
+               if(yes){
+            	    var rows = g.getSelectedRow();
+            	    if(rows && rows.id){
+	            	   $.ajax({
+	          				type: "POST",
+	          				url: '${pageContext.request.contextPath}/process_defi/'+rows.id,
+	          				data: "_method=delete",
+	          				success: function(msg){
+	            				if("success"==msg)
+	            					g.loadData();
+	            				else
+	            					$.ligerDialog.alert('删除失败!', '提示', 'error');
+	          				}
+	       			   });
+            	   }
+               }
+         });
+	}
+	
 	function deleteRow(){            
 		g.deleteSelectedRow();        
-	}                
+	}
+	
+	function dosSearch(){
+		
+	}
 	$(function () {            
 		window['g'] = $("#maingrid").ligerGrid({                
 			height:'100%',                
@@ -70,6 +93,10 @@
 		style="width: 120px; float: left; margin-left: 10px; display: none;"
 		onclick="deleteRow()">删除选择的行</a>
 	<div class="l-clear"></div>
+	<div id="searchbar">
+    	流程名称：<input id="flowname" type="text" value="" name="flowname"/>
+    	<input id="search" type="button" value="查询" onclick="doSearch()" />
+    </div>
 	<div id="maingrid"></div>
 	<div style="display: none;"></div>
 </body>
