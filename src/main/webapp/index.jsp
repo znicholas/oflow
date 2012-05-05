@@ -138,7 +138,7 @@
             }
 	</script>
 </head>
-<body style="padding:0px;background:#EAEEF5;">
+<body style="padding:0px;">
 <div id="pageloading"></div>
 <div id="container">
 	<div class="pane ui-layout-north">
@@ -174,7 +174,7 @@
            </div> 
        </div>
 	
-	<div class="pane ui-layout-south" style="height:32px; line-height:32px; text-align:center;">
+	<div class="pane ui-layout-south" style="height:32px; line-height:32px; text-align:center;background:#EAEEF5;">
 		Copyright © 2012-2013 www.yunbosoruce.com
 	</div>
 </div>

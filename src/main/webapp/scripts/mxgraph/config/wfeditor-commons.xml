@@ -70,19 +70,18 @@
 		function (div)
 		{
 			var off = 30;
-			
 			if (this.graph != null)
 			{
 				var layer = this.graph.model.root.getChildAt(0);
 				mxUtils.para(div,  mxResources.get('examples'));
 				mxUtils.linkInvoke(div, mxResources.get('newDiagram'), this,
-					'open', 'diagrams/empty.xml', off);
+					'open', mxBasePath + '/diagrams/empty.xml', off);
 				mxUtils.br(div);
 				mxUtils.linkInvoke(div, mxResources.get('swimlanes'), this,
-					'open', 'diagrams/swimlanes.xml', off);
+					'open', mxBasePath + '/diagrams/swimlanes.xml', off);
 				mxUtils.br(div);
 				mxUtils.linkInvoke(div, mxResources.get('travelBooking'), this,
-					'open', 'diagrams/travel-booking.xml', off);
+					'open', mxBasePath + '/diagrams/travel-booking.xml', off);
 				mxUtils.br(div);
 				
 				if (!this.graph.isSelectionEmpty())

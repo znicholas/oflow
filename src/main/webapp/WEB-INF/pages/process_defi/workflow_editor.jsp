@@ -12,7 +12,36 @@
 <link href="<c:url value="/styles/index.css" />" rel="stylesheet" type="text/css" />
 <link href="<c:url value="/styles/process_defi/workflow_editor.css" />" rel="stylesheet" type="text/css" />
 <script src="<c:url value="/scripts/jquery/jquery-1.5.2.min.js" />" type="text/javascript"></script>    
-<script src="<c:url value="/scripts/ligerUI/js/ligerui.all.js" />" type="text/javascript"></script>
+
+<script src="<c:url value="/scripts/ligerUI/js/core/base.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerLayout.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerAccordion.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerTab.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerTree.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerMenu.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerMenuBar.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerWindow.js" />" type="text/javascript"></script>
+<!-- edit -->
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerForm.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerDateEditor.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerComboBox.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerCheckBox.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerButton.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerDialog.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerRadio.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerSpinner.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerTextBox.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerTip.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerToolBar.js" />" type="text/javascript"></script>
+<!-- list -->
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerGrid.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerToolBar.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerResizable.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/ligerUI/js/plugins/ligerCheckBox.js" />" type="text/javascript"></script>
+<!-- validation -->
+<script src="<c:url value="/scripts/jquery-validation/jquery.validate.min.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery-validation/jquery.metadata.js" />" type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery-validation/messages_cn.js" />" type="text/javascript"></script>
 
 <!-- mxgraph -->
 <script type="text/javascript">
@@ -23,6 +52,7 @@
 <script type="text/javascript" src="<c:url value="/scripts/mxgraph/mxUtils.js" />"></script>
 <script type="text/javascript" src="<c:url value="/scripts/mxgraph/mxConstants.js" />"></script>
 <script type="text/javascript" src="<c:url value="/scripts/mxgraph/mxOther.js" />"></script>
+<script type="text/javascript" src="<c:url value="/scripts/mxgraph/mxCodec.js" />"></script>
 
 <!-- workflow editor -->
 <script type="text/javascript" src="<c:url value="/scripts/mxgraph/mxApplication.js" />"></script>
@@ -55,6 +85,7 @@ $(function () {
 		leftWidth: 190, 
 		height: '100%', 
 		heightDiff:-34,
+		rightWidth: 190,
 		space:4, 
 		onHeightChanged: f_heightChanged 
 	});
@@ -77,7 +108,7 @@ $(function () {
         nodeWidth: 120,
         attribute: ['id', 'nodename', 'url']
     });*/
-	
+    
     $(".l-link").hover(function () {
         $(this).addClass("l-link-over");
     }, function () {
@@ -98,6 +129,12 @@ $(function () {
     // 初始化流程编辑器
     new mxApplication(mxBasePath + '/config/workfloweditor.xml');
 });
+
+function f_heightChanged(options) {
+    if (accordion && options.middleHeight - 24 > 0)
+        accordion.setHeight(options.middleHeight - 24);
+}
+
 
 // 重载mxToolbar方法
 /*mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style) {
@@ -142,34 +179,12 @@ $(function () {
 	this.container.appendChild(div);
 	return div;
 };*/
-
-function f_heightChanged(options) {
-    if (accordion && options.middleHeight - 24 > 0)
-        accordion.setHeight(options.middleHeight - 24);
-}
-
 </script>
 </head>
 <body style="padding:0px;background:#EAEEF5;">
 <div id="pageloading"></div>
 <!-- Header --> 
 <div id="editor_layout" style="width:99.2%; margin:0 auto; margin-top:4px; ">
-	<!-- 左边区域 -->
-	<div position="left"  title="BPMN2.0" id="editor_accordions"> 
-		<div id="editor_accordion_acts" title="Activities" class="l-scroll">
-		</div>
-		
-		<div title="Gateways">
-		<div style=" height:7px;"></div>
-			<a class="l-link" href="">列表页面</a> 
-			<a class="l-link" href="demos/dialog/win7.htm" target="_blank">模拟Window桌面</a> 
-		</div>    
-		
-		<div title="Swimlanes">
-		<div style=" height:7px;"></div>
-			<a class="l-link" href="lab/generate/index.htm" target="_blank">表格表单设计器</a> 
-		</div> 
-	</div>
 	<!-- 中间区域 -->
 	<div position="center" id="framecenter">
 		<!-- 流程图容器 -->
@@ -188,6 +203,7 @@ function f_heightChanged(options) {
 	</div>
 	<!-- 右边区域 -->
 	<div position="right"  title="Properties" id="prop_accordion">
+		<div id="propgrid"></div>
 	</div>
 </div>
 <div id="copyright" style="height:32px; line-height:32px; text-align:center;">

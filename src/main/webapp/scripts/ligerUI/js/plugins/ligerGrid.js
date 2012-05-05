@@ -215,8 +215,26 @@
         {
             return value.toString();
         }
-    }
-
+    };
+    
+    // 根据数据类型自动识别编辑器
+    $.ligerDefaults.Grid.editors['auto'] = {
+    	create: function (container, editParm) {
+    		return $.ligerDefaults.Grid.editors[editParm.record.type].create(container, editParm);
+    	},
+    	getValue: function (input, editParm) { 
+    		return $.ligerDefaults.Grid.editors[editParm.record.type].getValue(input, editParm);
+        },
+        setValue: function (input, value, editParm) { 
+    		$.ligerDefaults.Grid.editors[editParm.record.type].setValue(input, value, editParm);
+        },
+        resize: function (input, width, height, editParm) {
+        	$.ligerDefaults.Grid.editors[editParm.record.type].resize(input, width, height, editParm);
+        },
+        destroy: function (input, editParm) {
+        	$.ligerDefaults.Grid.editors[editParm.record.type].destroy(input, editParm);
+        }
+    };
 
     $.ligerDefaults.Grid.editors['date'] =
     {

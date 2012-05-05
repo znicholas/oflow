@@ -117,6 +117,36 @@ function onInit(editor) {
 		editor.execute('switchView');
 	});
 }
+
+mxEditor.prototype.showProperties = function(cell) {
+	var datas = { Rows: [
+                     { "name": "x", "value": 0, "type": "int"}, 
+                     { "name": "y", "value": 100, "type": "int"}, 
+                     { "name": "name", "value": "我的流程", "type": "text"}],
+	              Total: 3
+	             };
+
+	
+	// 动态生成属性表格
+    $("#propgrid").ligerGrid({
+    	data: datas,
+        columns: [
+        	{ display: '属性名称', name: 'name'},
+        	{ display: '属性值', name: 'value', editor: { type: 'auto'}}
+        ],
+        onSelectRow: function (rowdata, rowindex)
+        {
+            $("#txtrowindex").val(rowindex);
+        },
+        enabledEdit: true, 
+        isScroll: false,
+        rownumbers:false,
+        usePager: false, 
+        width: '100%'
+    });
+    
+    $(window).trigger("resize.grid");
+};
 		
 /*mxEditor.prototype.showProperties = function(cell) {
 	cell = cell || this.graph.getSelectionCell();
