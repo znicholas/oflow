@@ -282,11 +282,21 @@
         _setWidth: function (value)
         {
             var g = this;
+            var p = this.options;
             if (value > 20)
             {
                 g.wrapper.css({ width: value });
                 g.inputText.css({ width: value - 20 });
                 g.textwrapper.css({ width: value });
+                //下拉框宽度调整
+                if (p.selectBoxWidth)
+                {
+                    g.selectBox.width(p.selectBoxWidth);
+                }
+                else
+                {
+                    g.selectBox.css('width', g.wrapper.css('width'));
+                }
             }
         },
         _setHeight: function (value)

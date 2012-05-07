@@ -38,7 +38,12 @@
 			</Swimlane>
 		</add>
 		<add as="task">
-			<Task label="Task" description="" href="">
+			<Task label="Task"
+				taskId="function(){return new Date().getTime();}"
+				taskType="Send"
+				peformerType=""
+				expression=""
+				description="">
 				<mxCell vertex="1">	
 					<mxGeometry as="geometry" width="72" height="32"/>
 				</mxCell>
@@ -66,6 +71,16 @@
 			</Symbol>
 		</add>
 	</Array>
+	
+	<!-- 属性编辑配置 -->
+	<Array as="attrEditors">
+		<editor name="taskId" type="readonly"></editor>
+		<editor name="taskType" type="select" options="[{name: 'Send'}, {name: 'Receive'}, {name: 'User'}, {name:'Manual'}, {name: 'Service'}, {name: 'Bussiness Rule'}, {name: 'Script'}]" displayColumnName="name"></editor>
+		<editor name="peformerType" type="select" options="[{name: 'Assignee'}, {name: 'Candidate users'}, {name: 'Candidate groups'}]" displayColumnName="name"></editor>
+		
+		<editor name="description" type="text"></editor>
+	</Array>
+		
 	<add as="createTasks"><![CDATA[
 		function (div)
 		{

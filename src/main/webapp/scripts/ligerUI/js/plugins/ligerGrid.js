@@ -220,19 +220,36 @@
     // 根据数据类型自动识别编辑器
     $.ligerDefaults.Grid.editors['auto'] = {
     	create: function (container, editParm) {
-    		return $.ligerDefaults.Grid.editors[editParm.record.type].create(container, editParm);
+    		var column = editParm.column;
+    		column.editor.displayColumnName = editParm.record.displayColumnName;
+    		if (!editParm.record.valueColumnName) {
+    			column.editor.valueColumnName = editParm.record.displayColumnName;
+    		} else {
+    			column.editor.valueColumnName = editParm.record.valueColumnName;
+    		}
+    		column.editor.data = editParm.record.data;
+    		
+    		return $.ligerDefaults.Grid.editors[this.getType(editParm)].create(container, editParm, editParm.record.type);
     	},
-    	getValue: function (input, editParm) { 
-    		return $.ligerDefaults.Grid.editors[editParm.record.type].getValue(input, editParm);
+    	getValue: function (input, editParm) {
+    		return $.ligerDefaults.Grid.editors[this.getType(editParm)].getValue(input, editParm);
         },
-        setValue: function (input, value, editParm) { 
-    		$.ligerDefaults.Grid.editors[editParm.record.type].setValue(input, value, editParm);
+        setValue: function (input, value, editParm) {
+    		$.ligerDefaults.Grid.editors[this.getType(editParm)].setValue(input, value, editParm);
         },
         resize: function (input, width, height, editParm) {
-        	$.ligerDefaults.Grid.editors[editParm.record.type].resize(input, width, height, editParm);
+        	$.ligerDefaults.Grid.editors[this.getType(editParm)].resize(input, width, height, editParm);
         },
         destroy: function (input, editParm) {
-        	$.ligerDefaults.Grid.editors[editParm.record.type].destroy(input, editParm);
+        	$.ligerDefaults.Grid.editors[this.getType(editParm)].destroy(input, editParm);
+        },
+        getType: function (editParm){
+        	var type = "text";
+    		if (editParm.record.type) {
+    			type = editParm.record.type;
+    		}
+    		
+    		return type;
         }
     };
 
@@ -281,9 +298,15 @@
              var column = editParm.column;
              var input = $("<input type='text'/>");
              container.append(input);
+             var initValue = '';
+             if (column.editor.data){
+            	 initValue = column.editor.data[0][column.editor.valueColumnName];
+             }
+             
              var options = {
                  data: column.editor.data,
                  slide: false,
+                 initValue: initValue,
                  valueField: column.editor.valueField || column.editor.valueColumnName,
                  textField: column.editor.textField || column.editor.displayColumnName
              };
@@ -323,7 +346,8 @@
          create: function (container, editParm)
          {
              var column = editParm.column;
-             var input = $("<input type='text'/>");
+             var input = $("<input type='text' />");
+            
              container.append(input);
              input.css({ border: '#6E90BE' })
              var options = {
@@ -360,10 +384,16 @@
 
 
     $.ligerDefaults.Grid.editors['string'] =
-     $.ligerDefaults.Grid.editors['text'] = {
-         create: function (container, editParm)
+     $.ligerDefaults.Grid.editors['text'] = 
+     $.ligerDefaults.Grid.editors['readonly'] =
+     {
+         create: function (container, editParm, type)
          {
              var input = $("<input type='text' class='l-text-editing'/>");
+             if ("readonly" == type) {
+            	 input.attr("readonly", "readonly");
+             }
+             
              container.append(input);
              input.ligerTextBox();
              return input;

@@ -11,7 +11,9 @@
 <link href="<c:url value="/scripts/ligerUI/skins/Aqua/css/ligerui-layout.css" />" rel="stylesheet" type="text/css" />
 <link href="<c:url value="/styles/index.css" />" rel="stylesheet" type="text/css" />
 <link href="<c:url value="/styles/process_defi/workflow_editor.css" />" rel="stylesheet" type="text/css" />
+
 <script src="<c:url value="/scripts/jquery/jquery-1.5.2.min.js" />" type="text/javascript"></script>    
+<script type="text/javascript" src="<c:url value="/scripts/jquery.json-2.3.min.js" />"></script>
 
 <script src="<c:url value="/scripts/ligerUI/js/core/base.js" />" type="text/javascript"></script>
 <script src="<c:url value="/scripts/ligerUI/js/plugins/ligerLayout.js" />" type="text/javascript"></script>
@@ -133,52 +135,9 @@ $(function () {
 function f_heightChanged(options) {
     if (accordion && options.middleHeight - 24 > 0)
         accordion.setHeight(options.middleHeight - 24);
+    
+    $(window).trigger("resize.grid");
 }
-
-
-// 重载mxToolbar方法
-/*mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style) {
-	var div = document.createElement('div');
-	var text = document.createTextNode(title);
-	div.className = 'l-editor-accordion-item';
-	
-	var img = document.createElement((icon != null) ? 'img': 'button');
-	img.initialClassName = style || 'mxToolbarMode';
-	img.className = img.initialClassName;
-	img.setAttribute('src', icon);
-	img.altIcon = pressedIcon;
-	if (title != null) {
-		img.setAttribute('title', title);
-	}
-	img.setAttribute('align', 'absmiddle'); //设置图片垂直居中
-	if (this.enabled) {
-		mxEvent.addListener(img, 'click', mxUtils.bind(this,
-		function(evt) {
-			this.selectMode(img, funct);
-			this.noReset = false;
-		}));
-		mxEvent.addListener(img, 'dblclick', mxUtils.bind(this,
-		function(evt) {
-			this.selectMode(img, funct);
-			this.noReset = true;
-		}));
-		if (this.defaultMode == null) {
-			this.defaultMode = img;
-			this.selectedMode = img;
-			var tmp = img.altIcon;
-			if (tmp != null) {
-				img.altIcon = img.getAttribute('src');
-				img.setAttribute('src', tmp);
-			} else {
-				img.className = img.initialClassName + 'Selected';
-			}
-		}
-	}
-	div.appendChild(img);
-	div.appendChild(text);
-	this.container.appendChild(div);
-	return div;
-};*/
 </script>
 </head>
 <body style="padding:0px;background:#EAEEF5;">
@@ -192,7 +151,7 @@ function f_heightChanged(options) {
 		<!-- Graph Here -->
 		</div>
 		<div id="xml" class="base" style="left:0px;right:0px;top:0px;bottom:40px;display:none;">
-			<textarea id="xmlContent" style="height:100%;width:100%;"></textarea>
+			<textarea id="xmlContent" style="height:600px;width:100%;"></textarea>
 		</div>
 		<div class="base" align="right" style="width:100%;height:20px;bottom:0px;right:40px;">
 			<input id="source" type="checkbox" />&nbsp;Source

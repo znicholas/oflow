@@ -111,6 +111,44 @@ function onInit(editor) {
 	
 	editor.dblClickAction = 'showProperties';
 	
+	// 动态生成属性表格
+    $("#propgrid").ligerGrid({
+        columns: [
+        	{ display: '属性名称', name: 'label', minWidth : 80},
+        	{ display: '属性值', name: 'value', minWidth : 102, editor: { 
+        		type: 'auto'
+        	}},
+        	{ display: '', name: '', width:5}
+        ],
+        enabledEdit: true, 
+        isScroll: false,
+        rownumbers:false,
+        usePager: false, 
+        width: '100%',
+        onAfterEdit: function(e){ // 动态绑定事件
+	    	var cell = $("#propgrid").data("selectedCell");
+	    	// 编辑后更新流程图
+	    	editor.hideProperties();
+	    	var model = editor.graph.model;
+	    	model.beginUpdate();
+	    	var edit = null;
+	        try {
+	        	// 值为一般字符串
+				edit = new mxCellAttributeChange(cell, e.record.name, e.record.value);
+	        	
+	            model.execute(edit);
+	            
+	            if (editor.graph.isAutoSizeCell(cell)) {
+	            	editor.graph.updateCellSize(cell);
+	            }
+	        } finally {
+	            model.endUpdate();
+	        }
+	    }
+    });
+    
+    $(window).trigger("resize.grid");
+	
 	// 点击checkbox切换模式(XML编辑模式或图形编辑模式)
 	mxEvent.addListener(sourceInput, 'click', function()
 	{
@@ -119,35 +157,76 @@ function onInit(editor) {
 }
 
 mxEditor.prototype.showProperties = function(cell) {
-	var datas = { Rows: [
-                     { "name": "x", "value": 0, "type": "int"}, 
-                     { "name": "y", "value": 100, "type": "int"}, 
-                     { "name": "name", "value": "我的流程", "type": "text"}],
-	              Total: 3
-	             };
-
+	var datas = { Rows: getColumnDatas(this, cell), Total: 3};
 	
-	// 动态生成属性表格
-    $("#propgrid").ligerGrid({
-    	data: datas,
-        columns: [
-        	{ display: '属性名称', name: 'name'},
-        	{ display: '属性值', name: 'value', editor: { type: 'auto'}}
-        ],
-        onSelectRow: function (rowdata, rowindex)
-        {
-            $("#txtrowindex").val(rowindex);
-        },
-        enabledEdit: true, 
-        isScroll: false,
-        rownumbers:false,
-        usePager: false, 
-        width: '100%'
-    });
-    
+	var manager = $("#propgrid").ligerGetGridManager();
+	$("#propgrid").data("selectedCell", cell);
+	
+    manager.loadData(datas);
+
     $(window).trigger("resize.grid");
 };
+
+/**
+ * 获取列数据
+ */
+function getColumnDatas(editor, cell){
+	var rtn = [];
+	var model = editor.graph.getModel();
+    
+	var value = model.getValue(cell);
+    var nodeList = value.childNodes;
+    for (var i=0;i<nodeList.length;i++){
+    	var node = nodeList[i];
+    	if (mxUtils.isNode(node)){
+    		alert(node.textContent);
+    	}
+    }
+    
+    if (mxUtils.isNode(value)) {
+    	// 基本图形属性
+	    if (model.isVertex(cell)) {
+	        geo = model.getGeometry(cell);
+	        if (geo != null) {
+	        	rtn.push({ "label": "top", "name": "top", "value": geo.y, "type": "int"});
+	        	rtn.push({ "label": "left", "name": "left", "value": geo.x, "type": "int"});
+	        	rtn.push({ "label": "width", "name": "width", "value": geo.width, "type": "int"});
+	        	rtn.push({ "label": "height", "name": "height", "value": geo.height, "type": "int"});
+	        }
+	    }
+    }
+    
+    // 扩展属性
+    var tmp = model.getStyle(cell);
+    rtn.push({ "label":"style", "name": "style", "value": tmp || '', "type": "text"});
+    
+    var attrs = value.attributes;
+   
+    for (var i = 0; i < attrs.length; i++) {
+        var val = attrs[i].nodeValue;
 		
+        try {
+			eval("val=" + val);
+			if ("function" == typeof(val)) { // 为function时执行
+				val = val();
+				attrs[i].nodeValue = val;
+			}
+		} catch (e) {
+		}	
+        
+        
+    	var config = { "label":attrs[i].nodeName,  "name": attrs[i].nodeName, "value": val ? val:''};
+    	
+    	if (editor.attrEditors[attrs[i].nodeName]) {
+    		$.extend(config, editor.attrEditors[attrs[i].nodeName]);
+    	}
+    	
+    	rtn.push(config);
+    }
+    
+	return rtn;
+}
+
 /*mxEditor.prototype.showProperties = function(cell) {
 	cell = cell || this.graph.getSelectionCell();
 	if (cell == null) {
@@ -264,5 +343,49 @@ mxEditor.prototype.createProperties = function(cell) {
     }
     return null;
 };
+
+//重载mxToolbar方法
+/*mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style) {
+	var div = document.createElement('div');
+	var text = document.createTextNode(title);
+	div.className = 'l-editor-accordion-item';
+	
+	var img = document.createElement((icon != null) ? 'img': 'button');
+	img.initialClassName = style || 'mxToolbarMode';
+	img.className = img.initialClassName;
+	img.setAttribute('src', icon);
+	img.altIcon = pressedIcon;
+	if (title != null) {
+		img.setAttribute('title', title);
+	}
+	img.setAttribute('align', 'absmiddle'); //设置图片垂直居中
+	if (this.enabled) {
+		mxEvent.addListener(img, 'click', mxUtils.bind(this,
+		function(evt) {
+			this.selectMode(img, funct);
+			this.noReset = false;
+		}));
+		mxEvent.addListener(img, 'dblclick', mxUtils.bind(this,
+		function(evt) {
+			this.selectMode(img, funct);
+			this.noReset = true;
+		}));
+		if (this.defaultMode == null) {
+			this.defaultMode = img;
+			this.selectedMode = img;
+			var tmp = img.altIcon;
+			if (tmp != null) {
+				img.altIcon = img.getAttribute('src');
+				img.setAttribute('src', tmp);
+			} else {
+				img.className = img.initialClassName + 'Selected';
+			}
+		}
+	}
+	div.appendChild(img);
+	div.appendChild(text);
+	this.container.appendChild(div);
+	return div;
+};*/
 
 window.onbeforeunload = function() { return mxResources.get('changesLost'); };

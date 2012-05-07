@@ -976,6 +976,9 @@ mxCodecRegistry.register(function() {
 			if (role == 'templates') {
 				this.decodeTemplates(dec, child, obj);
 				return;
+			} else if (role == 'attrEditors') {
+				this.decodeAttrEditors(dec, child, obj);
+				return;
 			}
 		} else if (child.nodeName == 'ui') {
 			this.decodeUi(dec, child, obj);
@@ -1045,5 +1048,34 @@ mxCodecRegistry.register(function() {
 			}
 		}
 	};
+	codec.decodeAttrEditors = function (dec, node, editor) { // 属性编辑器
+		if (editor.attrEditors == null) {
+			editor.attrEditors = [];
+		}
+		
+		var children = mxUtils.getChildNodes(node);
+		for (var j = 0; j < children.length; j++) {
+			var name = children[j].getAttribute('name');
+			var obj = {};
+			obj.name = children[j].getAttribute('name');
+			obj.type = children[j].getAttribute('type');
+			obj.data = children[j].getAttribute('options');
+			
+			try {
+				// options为json字符串
+				eval("obj.data = " + children[j].getAttribute('options'));
+			} catch (e) {
+			}
+			
+			obj.displayColumnName = children[j].getAttribute('displayColumnName');
+			obj.valueColumnName = children[j].getAttribute('valueColumnName');
+			if (!obj.valueColumnName) {
+				obj.valueColumnName = obj.displayColumnName;
+			}
+			
+			editor.attrEditors[name] = obj;
+		}
+	};
+	
 	return codec;
 } ());
