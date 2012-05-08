@@ -70,6 +70,13 @@
 				</mxCell>
 			</Symbol>
 		</add>
+		<add as="startEvent">
+			<Symbol label="StartEvent" id="" description="" href="">
+				<mxCell vertex="1" style="symbol;image=images/symbols/event.png">		
+					<mxGeometry as="geometry" width="32" height="32"/>
+				</mxCell>
+			</Symbol>
+		</add>
 	</Array>
 	
 	<!-- 属性编辑配置 -->

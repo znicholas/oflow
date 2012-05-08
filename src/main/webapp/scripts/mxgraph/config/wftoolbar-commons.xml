@@ -43,7 +43,7 @@
 	<add as="Rhombus" template="shape" style="rhombus" icon="images/rhombus.gif"/>
 	<add as="Actor" template="shape" style="actor" icon="images/actor.gif"/>
 	<br/><hr/>
-	<add as="Event" template="symbol" style="symbol;image=images/symbols/event.png" icon="images/symbols/small_event.gif"/>
+	<add as="Event" template="startEvent" style="symbol;image=images/symbols/event.png" icon="images/symbols/small_event.gif"/>
 	<add as="Event (Intermediate)" template="symbol" style="symbol;image=images/symbols/event_intermediate.png" icon="images/symbols/small_event_intermediate.gif"/>
 	<add as="Event (End)" template="symbol" style="symbol;image=images/symbols/event_end.png" icon="images/symbols/small_event_end.gif"/>
 	<add as="Timer" template="symbol" style="symbol;image=images/symbols/timer.png" icon="images/symbols/small_timer.gif"/>
