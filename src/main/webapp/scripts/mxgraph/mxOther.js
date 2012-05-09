@@ -24587,6 +24587,7 @@ mxEditor.prototype.undoManager = null;
 mxEditor.prototype.keyHandler = null;
 mxEditor.prototype.actions = null;
 mxEditor.prototype.dblClickAction = 'edit';
+mxEditor.prototype.clickAction = null;
 mxEditor.prototype.swimlaneRequired = false;
 mxEditor.prototype.disableContextMenu = true;
 mxEditor.prototype.insertFunction = null;
@@ -25023,6 +25024,7 @@ mxEditor.prototype.createGraph = function() {
 	graph.setTooltips(true);
 	graph.setPanning(true);
 	this.installDblClickHandler(graph);
+	//this.installClickHandler(graph);
 	this.installUndoHandler(graph);
 	this.installDrillHandler(graph);
 	this.installChangeHandler(graph);
@@ -25092,6 +25094,17 @@ mxEditor.prototype.installDblClickHandler = function(graph) {
 		var cell = evt.getProperty('cell');
 		if (cell != null && graph.isEnabled() && this.dblClickAction != null) {
 			this.execute(this.dblClickAction, cell);
+			evt.consume();
+		}
+	}));
+};
+mxEditor.prototype.installClickHandler = function(graph) {
+	graph.addListener(mxEvent.CLICK, mxUtils.bind(this,
+	function(sender, evt) {
+		var cell = evt.getProperty('cell');
+		alert(1);
+		if (graph.isEnabled() && this.clickAction != null) {
+			this.execute(this.clickAction, cell);
 			evt.consume();
 		}
 	}));

@@ -156,6 +156,29 @@ function onInit(editor) {
 	});
 }
 
+/**
+ * 重载双击事件处理
+ * @param graph
+ */
+mxEditor.prototype.installDblClickHandler = function(graph) {
+	graph.addListener(mxEvent.DOUBLE_CLICK, mxUtils.bind(this,
+	function(sender, evt) {
+		var cell = evt.getProperty('cell');
+		cell = cell || this.graph.getSelectionCell();
+		if (cell == null) {
+		    cell = this.graph.getCurrentRoot();
+		    if (cell == null) {
+		        cell = this.graph.getModel().getRoot();
+		    }
+		}
+		
+		if (cell != null && graph.isEnabled() && this.dblClickAction != null) {
+			this.execute(this.dblClickAction, cell);
+			evt.consume();
+		}
+	}));
+};
+
 mxEditor.prototype.showProperties = function(cell) {
 	var datas = { Rows: getColumnDatas(this, cell), Total: 3};
 	
@@ -175,6 +198,10 @@ function getColumnDatas(editor, cell){
 	var model = editor.graph.getModel();
     
 	var value = model.getValue(cell);
+	if (!value) {
+		return rtn;
+	}
+	
     var nodeList = value.childNodes;
     for (var i=0;i<nodeList.length;i++){
     	var node = nodeList[i];
