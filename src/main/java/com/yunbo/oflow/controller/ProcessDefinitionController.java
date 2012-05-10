@@ -19,7 +19,8 @@ import com.yunbo.oflow.service.ProcessDefinitionService;
 
 @Controller
 @RequestMapping("/process_defi")
-public class ProcessDefinitionController extends BaseRestJsonSpringController<ProcessDefinitionEntity, java.lang.Long> {
+public class ProcessDefinitionController extends
+		BaseRestJsonSpringController<ProcessDefinitionEntity, java.lang.Long> {
 	@Autowired
 	ProcessDefinitionService service;
 
@@ -68,34 +69,41 @@ public class ProcessDefinitionController extends BaseRestJsonSpringController<Pr
 
 	@Override
 	public @ResponseBody
-	ProcessDefinitionEntity save(ProcessDefinitionEntity model) throws Exception {
+	ProcessDefinitionEntity save(ProcessDefinitionEntity model)
+			throws Exception {
 		return service.save(model);
 	}
 
 	@Override
 	public String delete(@PathVariable Long id) {
 		boolean falg = service.removeById(id);
-		if(falg)
+		if (falg)
 			return "success";
 		else
 			return "input";
 	}
 
 	@Override
+	@RequestMapping(value = "/delete")
 	public String batchDelete(@RequestParam("ids") Long[] items) {
 		System.out.println("toBatchDelete");
-		for (int i = 0; i < items.length; i++) {
-			System.out.println("ID-> " + items[i]);
+		try {
+			service.removeByIds(items);
+			return "success";
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return "success";
+		return "input";
+
 	}
 
 	@Override
 	public @ResponseBody
 	Pager<ProcessDefinitionEntity> query(
-			@RequestParam @JsonFormat(contentType = Expression.class) List<Expression> exps, int pageNumber,
-			int pageSize) {
-		Pager<ProcessDefinitionEntity> pager = service.query(exps, pageNumber, pageSize);
+			@RequestParam @JsonFormat(contentType = Expression.class) List<Expression> exps,
+			int pageNumber, int pageSize) {
+		Pager<ProcessDefinitionEntity> pager = service.query(exps, pageNumber,
+				pageSize);
 		return pager;
 	}
 }

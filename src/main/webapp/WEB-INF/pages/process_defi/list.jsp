@@ -25,7 +25,8 @@
 			record: 'recordCount',                
 			pageParmName: 'pageNumber',                
 			pagesizeParmName: 'pageSize',             
-			pageSize:30,                 
+			pageSize:30,
+			checkbox:true,              
 			rownumbers:true,
 			toolbar: { items: [	                
 				{ id:'create', text: '增加', icon: 'add' },	                
@@ -51,9 +52,40 @@
 		});
 		
 		$("[toolbarid=remove]").click(function(){
-			g.deleteSelectedRow();
+			var data = g.getSelectedRows();        	
+			var ids = new Array();
+			if (data.length>0) {
+				for(var i=0;i<data.length;i++){
+					ids.push(data[i].id);
+				}
+				$.ajax({ type: "post", 
+    				url: contextPath + 'process_defi/delete?ids=' + ids,
+    				async: false, // 非异步请求
+        			contentType: "application/json", 
+        			dataType: "json", 
+        			success: function(data) { 
+        				if(data=="success"){
+        					g.loadData();
+        					showTip("数据删除成功!");
+    					}else{
+    						showTip("数据删除失败!");
+    					}
+        			}, 
+        			error: function(xhr) { 
+        				alert(xhr.responseText);
+        			}
+        		});
+			} else{
+				showTip("请选择数据,至少选择一条数据!");
+			}
 		});
-	});    
+	}); 
+	
+	showTip = function(msg){
+			var d = $.ligerDialog.tip({ content: msg});
+    		setTimeout(function () { d.close() }, 2000); // 2秒后自动关闭
+	}
+	   
 </script>
 <div style="overflow-x:hidden; padding:2px;">
 <a class="l-button" style="width: 120px; float: left; margin-left: 10px; display: none;" onclick="deleteRow()">删除选择的行</a>
